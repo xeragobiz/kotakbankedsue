@@ -1,7 +1,49 @@
-# Cloudflare Worker — Hide the `en-in` locale prefix (Option B)
+# Hiding the `en-in` locale prefix — final architecture
 
-This Worker sits in front of the AEM Edge Delivery origin and hides the **default
-locale** prefix from public URLs:
+The prefix is hidden by **two complementary pieces**:
+
+1. **AEM config-service path mapping** (the primary mechanism) — maps
+   `/content/kotakbankedsue/en-in/ -> /` so the origin serves clean, prefix-free
+   URLs natively. Applied via `admin.hlx.page/config/.../public.json` (see
+   "Path mapping" below). This is what actually makes `/personal/...` resolve.
+2. **`redirect-en-in.mjs`** (this Worker) — 301s the OLD `/en-in/*` URLs to the
+   clean URLs. A blanket `/en-in/*` redirect is a wildcard, and the AEM redirects
+   sheet does not support wildcards, so it must live at the CDN.
+
+`index.mjs` (the original inbound-rewrite Worker) is now superseded by the path
+mapping for the inbound direction — deploy `redirect-en-in.mjs` instead.
+
+## Path mapping (already applied to the live config)
+
+```json
+{
+  "paths": {
+    "mappings": [
+      "/content/kotakbankedsue/en-in/:/",
+      "/content/kotakbankedsue/hi-in/:/hi-in/"
+    ],
+    "includes": ["/content/kotakbankedsue/", "/content/dam/kotakbankedsue/"],
+    "excludes": ["/content/kotakbankedsue/**/drafts/**"]
+  }
+}
+```
+
+Applied with (credentials injected automatically, no token in the command):
+
+```bash
+curl -X POST https://admin.hlx.page/config/xeragobiz/sites/kotakbankedsue/public.json \
+  -H 'content-type: application/json' --data @public.json
+```
+
+Verify: `https://main--kotakbankedsue--xeragobiz.aem.page/config.json`.
+Each existing page must be **re-published** to appear at its clean path.
+
+---
+
+## Worker (redirect-only): hides the prefix on OLD URLs
+
+`redirect-en-in.mjs` sits in front of the AEM Edge Delivery origin and 301s the
+**default locale** prefix from old public URLs:
 
 | Visitor sees | Worker fetches from origin |
 | --- | --- |
@@ -42,7 +84,7 @@ To change which locale is hidden, edit `DEFAULT_LOCALE` at the top of `index.mjs
 The credentials for pushing to Cloudflare are managed in your Cloudflare account —
 do not paste tokens into files or chat.
 
-1. Copy `index.mjs` into your Cloudflare Worker (dashboard editor, or `wrangler deploy`).
+1. Copy `redirect-en-in.mjs` into your Cloudflare Worker (dashboard editor, or `wrangler deploy`).
 2. Ensure the env vars above are set.
 3. Confirm the Worker route covers the production hostname: `www.kotak.com/*`.
 
