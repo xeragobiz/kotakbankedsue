@@ -5,9 +5,9 @@ locale** prefix from public URLs:
 
 | Visitor sees | Worker fetches from origin |
 | --- | --- |
-| `https://www.example.com/personal/accounts/saving-account` | `/en-in/personal/accounts/saving-account` |
-| `https://www.example.com/` | `/en-in/` |
-| `https://www.example.com/hi-in/personal/...` | `/hi-in/personal/...` (non-default locale, unchanged) |
+| `https://www.kotak.com/personal/accounts/saving-account` | `/en-in/personal/accounts/saving-account` |
+| `https://www.kotak.com/` | `/en-in/` |
+| `https://www.kotak.com/hi-in/personal/...` | `/hi-in/personal/...` (non-default locale, unchanged) |
 
 It is built on Adobe's official production Worker
 (`adobe/aem-cloudflare-prod-worker`) with three additions:
@@ -44,13 +44,28 @@ do not paste tokens into files or chat.
 
 1. Copy `index.mjs` into your Cloudflare Worker (dashboard editor, or `wrangler deploy`).
 2. Ensure the env vars above are set.
-3. Confirm the Worker route covers your production hostname (e.g. `www.example.com/*`).
+3. Confirm the Worker route covers the production hostname: `www.kotak.com/*`.
 
 ## Verify after deploy
 
-- `curl -sI https://<host>/personal/accounts/saving-account` → `200`, content renders.
-- `curl -sI https://<host>/en-in/personal/accounts/saving-account` → `301` to the clean URL.
-- View source on a page: links, `rel="canonical"`, and `og:url` contain **no** `/en-in/`.
+```bash
+# Clean URL serves the en-in page → expect 200
+curl -sI https://www.kotak.com/personal/accounts/saving-account | head -1
+
+# Explicit locale URL consolidates to the clean URL → expect 301 + Location: /personal/accounts/saving-account
+curl -sI https://www.kotak.com/en-in/personal/accounts/saving-account | grep -iE '^(HTTP|location)'
+
+# Links / canonical / og:url must contain NO /en-in/
+curl -s https://www.kotak.com/personal/accounts/saving-account | grep -iE 'canonical|og:url|href="/en-in' | head
+
+# Assets still resolve → expect 200 each
+curl -sI https://www.kotak.com/scripts/scripts.js | head -1
+curl -sI https://www.kotak.com/query-index.json | head -1
+```
+
+- Clean page URL → `200`, content renders.
+- `/en-in/...` → `301` to the clean URL.
+- Page source: links, `rel="canonical"`, and `og:url` contain **no** `/en-in/`.
 - Assets resolve: `/scripts/*`, `/styles/*`, `/blocks/*`, images, and `*.json` load normally.
 - `/hi-in/...` (once it exists) still serves with its visible prefix.
 
