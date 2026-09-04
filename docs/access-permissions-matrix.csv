@@ -1,5 +1,5 @@
-Group,Role,AEM Users,AEM Sites Content Managers,AEM Assets Collaborator Users,AEM Assets Power Users,AEM Reporters,AEM Administrators,Content Read/Write,Replicate (Publish),Notes
-Website ContentAuthor (MAKER),Creates & edits content; cannot publish,Yes,Yes,Yes,No,No,No,Read/Write on /content/kotakbankedsue,Denied,Can edit and Preview (.aem.page); publish action denied - submits for approval
-Website ContentPublisher (CHECKER),Reviews & publishes maker's work,Yes,Yes,Yes,No,No,No,Read/Write on /content/kotakbankedsue,Allowed,Has replication rights - can Publish/Unpublish to .aem.live
-Website Developers,Build blocks/code/config,Yes,Optional,No,No,No,Yes,Read/Write (code & config),Allowed,Admin or dev-scoped profile; access to Tools/config/deployments
-Website Inquiry,Read-only / view access,Yes,No,No,No,Yes,No,Read-only on /content/kotakbankedsue,Denied,View content and reports; no edit or publish
+Group,Role,AEM Users,AEM Sites Content Managers,AEM Assets Collaborator Users,AEM Assets Power Users,AEM Reporters,AEM Administrators,Content Read/Write,Replicate (Publish),Config-Service Role (admin.hlx.page),Notes
+Website ContentAuthor (MAKER),Creates & edits content; cannot publish,Yes,Yes,Yes,No,No,No,Read/Write on /content/kotakbankedsue,Denied,author,Can edit and Preview (.aem.page); publish action denied - submits for approval
+Website ContentPublisher (CHECKER),Reviews & publishes maker's work,Yes,Yes,Yes,No,No,No,Read/Write on /content/kotakbankedsue,Allowed,author + publish,Has replication rights - can Publish/Unpublish to .aem.live
+Website Developers,Build blocks/code/config,Yes,Optional,No,No,No,Yes,Read/Write (code & config),Allowed,config (+ admin as needed),Admin or dev-scoped profile; access to Tools/config/deployments
+Website Inquiry,Read-only / view access,Yes,No,No,No,Yes,No,Read-only on /content/kotakbankedsue,Denied,none,View content and reports; no edit or publish - public site suffices
