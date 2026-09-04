@@ -1,10 +1,15 @@
-# Hiding the `en-in` Locale Prefix from Public URLs — Approach & POC
+# Hiding the `en-in` (and `personal`) Prefix from Public URLs — Approach & POC
 
 **Status:** ✅ Live and verified
 **Site:** `xeragobiz/kotakbankedsue` (AEM authoring as content source, `type: markup`)
-**Goal:** Serve `https://<host>/personal/accounts/saving-account` instead of
+**Goal:** Serve `https://<host>/accounts/saving-account` instead of
 `https://<host>/en-in/personal/accounts/saving-account` — i.e. hide the default
-locale prefix — while keeping room for additional locales (`hi-in`, …).
+locale prefix (`en-in`) **and** the `personal` section segment — while keeping
+room for additional locales (`hi-in`, …).
+
+**Current clean-URL example:**
+`/content/kotakbankedsue/en-in/personal/accounts/saving-account`
+→ served at → `/accounts/saving-account`
 
 ---
 
@@ -34,6 +39,7 @@ curl -X POST https://admin.hlx.page/config/xeragobiz/sites/kotakbankedsue/public
   "paths": {
     "mappings": [
       "/content/kotakbankedsue/en-in/:/",
+      "/content/kotakbankedsue/en-in/personal/:/",
       "/content/kotakbankedsue/hi-in/:/hi-in/",
       "/content/kotakbankedsue/redirects:/redirects.json"
     ],
@@ -44,6 +50,10 @@ curl -X POST https://admin.hlx.page/config/xeragobiz/sites/kotakbankedsue/public
 ```
 
 - `en-in/ → /` — hides the default-locale prefix.
+- `en-in/personal/ → /` — **additionally** hides the `personal` section segment. This
+  is a *more specific* rule placed **below** the `en-in/` rule: **last matching entry
+  wins**, so only `personal` paths get the extra strip while other sections
+  (`premium-banking`, …) keep their structure. Verified: no collision.
 - `hi-in/ → /hi-in/` — second locale keeps a visible prefix (single-domain / Option B).
 - `redirects → /redirects.json` — **must** end in `.json` so the sheet publishes as
   a data sheet, not a page (this was the key fix; see Pitfalls).
@@ -52,17 +62,24 @@ curl -X POST https://admin.hlx.page/config/xeragobiz/sites/kotakbankedsue/public
 
 Verify: `https://main--kotakbankedsue--xeragobiz.aem.page/config.json`
 
+> To hide another section (e.g. `premium-banking`), add
+> `/content/kotakbankedsue/en-in/premium-banking/:/` below the `en-in/` rule —
+> but first confirm it won't collide with an already-hidden section's subpaths.
+
 ### 2. Redirects sheet (authored in AEM, published to `/redirects.json`)
 
-Columns must use **public URL paths** (relative to the domain), not `/content/...` paths:
+Columns must use **public URL paths** (relative to the domain), not `/content/...` paths.
+Because both `en-in` *and* `personal` are hidden, both old forms redirect to the clean URL:
 
 | source | destination |
 | --- | --- |
-| `/en-in/personal/accounts/saving-account` | `/personal/accounts/saving-account` |
+| `/en-in/personal/accounts/saving-account` | `/accounts/saving-account` |
+| `/personal/accounts/saving-account` | `/accounts/saving-account` |
 
 - **source** = the OLD public URL to catch.
 - **destination** = the NEW clean public URL.
-- One row per URL — the sheet does **not** support wildcards.
+- One **literal** row per URL — the sheet does **not** support wildcards (`**` is
+  ignored; see Pitfalls).
 
 Verify: `https://main--kotakbankedsue--xeragobiz.aem.page/redirects.json` returns JSON.
 
@@ -72,11 +89,24 @@ Verify: `https://main--kotakbankedsue--xeragobiz.aem.page/redirects.json` return
 
 | URL | Result |
 | --- | --- |
-| `/personal/accounts/saving-account` (clean) | `200` |
-| `/en-in/personal/accounts/saving-account` (old) | `301` → clean URL → `200` |
-| `/redirects.json` | `200`, `application/json`, correct row |
+| `/accounts/saving-account` (clean) | `200` |
+| `/personal/accounts/saving-account` (old, now unpublished) | `301` → `/accounts/saving-account` → `200` |
+| `/en-in/personal/accounts/saving-account` (oldest) | `301` → `/accounts/saving-account` → `200` |
+| `/premium-banking/privacy` (unaffected section) | `200` (no collision) |
+| `/redirects.json` | `200`, `application/json`, correct rows |
 
 Confirmed on both `--.aem.page` (preview) and `--.aem.live` (production preview).
+
+### Unpublishing the old page copy
+After the redirects were confirmed, the stale published copy at
+`/personal/accounts/saving-account` was **unpublished** so the redirect owns that URL
+(no duplicate content). Order matters — unpublish only **after** the redirect is live,
+or the old URL 404s with nothing to catch it:
+
+```bash
+curl -X DELETE https://admin.hlx.page/live/xeragobiz/kotakbankedsue/main/personal/accounts/saving-account
+curl -X DELETE https://admin.hlx.page/preview/xeragobiz/kotakbankedsue/main/personal/accounts/saving-account
+```
 
 ---
 
@@ -93,16 +123,40 @@ stripped (it produces a mangled `/en-in/content/kotakbankedsue/...` path → an
 unaffected.
 
 **Workaround:** preview by opening the clean public URL directly. Rule: take the AEM
-author path, drop `/content/kotakbankedsue/en-in`, and the remainder is the public URL.
+author path, drop `/content/kotakbankedsue/en-in` (and `/personal` for personal pages),
+and the remainder is the public URL.
 
 | AEM author path | Public URL |
 | --- | --- |
 | `/content/kotakbankedsue/en-in/` | `/` |
-| `/content/kotakbankedsue/en-in/personal/accounts/saving-account` | `/personal/accounts/saving-account` |
+| `/content/kotakbankedsue/en-in/personal/accounts/saving-account` | `/accounts/saving-account` |
+| `/content/kotakbankedsue/en-in/premium-banking/privacy` | `/premium-banking/privacy` |
 
 ### Adding a redirect for another old URL
-Add a row to the redirects sheet (source = old `/en-in/...`, destination = clean path),
-then Quick Publish. Verify at `/redirects.json`.
+Add a **literal** row to the redirects sheet (source = old URL, destination = clean
+path — no wildcards), then Quick Publish. Verify at `/redirects.json`.
+
+---
+
+## Sitemap
+
+`/sitemap.xml` is generated from `helix-sitemap.yaml` (repo) / the config-service
+`sitemap.yaml`. Confirmed: **`en-in` does not appear in the sitemap** — all entries use
+the clean URLs (`/accounts/saving-account`, `/premium-banking/privacy`, `/hi-in/...`).
+
+**Known open item — `https://undefined/` host.** The sitemap currently emits
+`https://undefined/...` because no production hostname is configured. The domain comes
+from `cdn.prod.host` in the site config (empty), with the `origin` field in the sitemap
+config as an override. `origin` has been set to the preview host as a placeholder.
+
+- This is **cosmetic** and unrelated to the locale work; it only matters once a real
+  production domain exists.
+- **Fix when the real domain is known:** set `cdn.prod.host` (full CDN block) via the
+  config service, or set `origin: https://<real-host>` in `helix-sitemap.yaml`, then
+  regenerate (Sitemap Admin → **Generate**, or re-publish `/sitemap.xml`).
+
+Also fixed along the way: the Sitemap Admin tool's "No destination configured" error —
+the config-service `sitemap.yaml` was missing `source`/`destination`; both were added.
 
 ---
 
@@ -136,6 +190,15 @@ then Quick Publish. Verify at `/redirects.json`.
    hard reload / incognito to re-test.
 5. **Re-publish required.** Pages only move to clean URLs after being re-previewed and
    re-published following the mapping change.
+6. **No wildcards in the redirects sheet.** Rows like `/en-in/** → /` are silently
+   ignored — the sheet only matches literal paths. For a blanket `/en-in/*` (or
+   `/personal/*`) 301, use the CDN worker instead (see Multi-locale / scaling notes).
+7. **Unpublish ordering.** When removing a stale page copy, unpublish it only **after**
+   its redirect is live and verified. Unpublishing first leaves the old URL as a 404
+   with no redirect to catch visitors.
+8. **Mapping specificity / last-match-wins.** More specific mappings must come **below**
+   broader ones (e.g. `en-in/personal/` after `en-in/`). Before hiding a new section,
+   check it won't collide with an already-hidden section's subpaths.
 
 ---
 
