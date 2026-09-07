@@ -102,13 +102,54 @@ To redirect all old prefixed URLs, choose one:
 
 ---
 
-## 5. Blanket wildcard redirect (CDN worker)
+## 5. Wildcard redirects (CDN level)
 
-For "all `/en-in/*` redirect to the stripped path" in one rule, use the redirect-only
-worker already in the repo: `tools/cloudflare-worker/redirect-en-in.mjs`. Deploy it in
-Cloudflare (env `ORIGIN_HOSTNAME=main--kotakbankedsue--xeragobiz.aem.live`, route the
-production host). This is the supported way to do wildcard redirects, since the redirects
-sheet does not support them.
+For "**all** `/en-in/*` redirect to the stripped path" in a **single rule** — covering
+every current and future page with no per-row upkeep — use a **wildcard redirect at the
+CDN**. This is Adobe's recommended approach for pattern-based redirects, because the
+redirects sheet does **not** support wildcards (see §6).
+
+The wildcard captures everything after the prefix and re-inserts it in the destination:
+
+```
+Source pattern:  /en-in/*
+Redirect to:     /$1        (301)
+```
+
+`*` captures the remainder of the path; `$1` (or `$1` / `${1}` depending on CDN syntax)
+puts it back. So `/en-in/personal/accounts/saving-account` → `301` →
+`/personal/accounts/saving-account`, and the same rule handles every other page.
+
+### Option A — Cloudflare Worker (already in the repo)
+
+Deploy `tools/cloudflare-worker/redirect-en-in.mjs`:
+
+- Set env `ORIGIN_HOSTNAME=main--kotakbankedsue--xeragobiz.aem.live`
+- Route the production host (e.g. `www.<domain>/*`) at the Worker
+- It 301s `/en-in/<anything>` → `/<anything>` and passes everything else through
+
+### Option B — Cloudflare Redirect Rule / Bulk Redirect (no Worker)
+
+In the Cloudflare dashboard → **Rules → Redirect Rules**, create a rule:
+
+- **When** URI path matches `/en-in/*`
+- **Then** 301 to `/${1}` (wildcard capture)
+
+### Option C — other CDNs
+
+The concept is the same; only the syntax differs (consult your CDN's docs):
+
+| CDN | Where |
+| --- | --- |
+| Cloudflare | Redirect Rules / Bulk Redirects / Worker |
+| Fastly | VCL / redirect logic at the edge |
+| Akamai | Redirect behaviors in Property Manager |
+| CloudFront | CloudFront Functions / Lambda@Edge |
+
+> ⚠️ **Caveat (per Adobe docs):** blanket wildcard redirects can turn into "301 → 404"
+> for URLs that don't have a clean-path equivalent, and can mask broken links. For a
+> small, known set of pages, literal sheet rows (§4) are safer; use the wildcard when the
+> whole `/en-in/*` namespace maps cleanly.
 
 ---
 
@@ -122,8 +163,10 @@ sheet does not support them.
 3. **Redirect rows use public paths, correct direction.** source/destination must be
    public URLs (not `/content/...`), old → new. A reversed/`/content` row will 301 a
    clean URL to a 404.
-4. **No wildcards in the sheet.** `/en-in/*` or `/en-in/**` rows are silently ignored.
-   Use literal rows or the CDN worker.
+4. **No wildcards in the sheet — do them at the CDN.** `/en-in/*` or `/en-in/**` rows
+   in the redirects sheet are silently ignored. For a wildcard redirect, use a CDN-level
+   rule (Cloudflare Redirect Rule / Worker, Fastly, Akamai, CloudFront) — see §5. Use
+   literal sheet rows only for a small, known set of pages.
 5. **Re-publish required.** Pages move to clean URLs only after being re-previewed and
    re-published following a mapping change.
 6. **Unpublish ordering.** Remove a stale page copy only *after* its redirect is live,
