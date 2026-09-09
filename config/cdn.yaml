@@ -10,7 +10,7 @@ data:
       - name: block-sql-injection
         when:
           reqProperty: url
-          matches: "UNION SELECT|OR 1=1|--"
+          matches: "UNION(%20|\\+| )SELECT|OR(%20|\\+| )1=1|--"
         action:
           type: block
           status: 403
