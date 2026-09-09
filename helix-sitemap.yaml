@@ -1,15 +1,19 @@
 sitemaps:
-  default:
-    origin: https://main--kotakbankedsue--xeragobiz.aem.live
+  kotak:
+    origin: https://www.kotak.bank.in
     lastmod: YYYY-MM-DD
+    default: en
     languages:
       en:
         source: /en-in/query-index.json
-        destination: /en-in/sitemap.xml
+        destination: /sitemap-en.xml
         hreflang: en-in
         alternate: /en-in/{path}
       hi:
         source: /hi-in/query-index.json
-        destination: /hi-in/sitemap.xml
+        destination: /sitemap-hi.xml
         hreflang: hi-in
         alternate: /hi-in/{path}
+    index:
+      - /sitemap-en.xml
+      - /sitemap-hi.xml

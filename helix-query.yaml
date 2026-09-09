@@ -6,11 +6,18 @@ indices:
       - '/en-in/**'
     exclude:
       - '/**.json'
+      - '/en-in/nav'
+      - '/en-in/header'
+      - '/en-in/footer'
+      - '/en-in/fragments/**'
+      - '/en-in/metadata'
+      - '/en-in/placeholders'
+      - '/en-in/search'
+      - '/en-in/apply'
+      - '/en-in/track-application'
+      - '/en-in/**demo**'
     target: /en-in/query-index.json
     properties:
-      lastModified:
-        select: none
-        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
       title:
         select: head > meta[property="og:title"]
         value: attribute(el, "content")
@@ -20,6 +27,9 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: attribute(el, "content")
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
       lang:
         select: html
         value: attribute(el, "lang")
@@ -32,11 +42,18 @@ indices:
       - '/hi-in/**'
     exclude:
       - '/**.json'
+      - '/hi-in/nav'
+      - '/hi-in/header'
+      - '/hi-in/footer'
+      - '/hi-in/fragments/**'
+      - '/hi-in/metadata'
+      - '/hi-in/placeholders'
+      - '/hi-in/search'
+      - '/hi-in/apply'
+      - '/hi-in/track-application'
+      - '/hi-in/**demo**'
     target: /hi-in/query-index.json
     properties:
-      lastModified:
-        select: none
-        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
       title:
         select: head > meta[property="og:title"]
         value: attribute(el, "content")
@@ -46,6 +63,9 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: attribute(el, "content")
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
       lang:
         select: html
         value: attribute(el, "lang")
