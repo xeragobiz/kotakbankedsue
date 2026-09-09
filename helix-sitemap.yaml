@@ -17,8 +17,12 @@ sitemaps:
         hreflang: hi
         alternate: /hi-in/{path}
 
-# Top-level index block (sibling of sitemaps) - AEM regenerates
-# /sitemap-index.xml aggregating these whenever the sitemaps rebuild.
-index:
-  - /sitemap-en.xml
-  - /sitemap-hi.xml
+# NOTE: The top-level `index:` directive (which asks AEM to auto-generate
+# /sitemap-index.xml) is not being honored by the sitemap generator for this
+# project - rebuild jobs only ever emit sitemap-en.xml/sitemap-hi.xml and a
+# direct request returns "Unable to find sitemap that has destination:
+# /sitemap-index.xml". Until that platform behavior is resolved, the aggregated
+# index is maintained as a static file at repo-root sitemap-index.xml.
+# index:
+#   - /sitemap-en.xml
+#   - /sitemap-hi.xml
