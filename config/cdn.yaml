@@ -1,0 +1,41 @@
+kind: "CDN"
+version: "1"
+metadata:
+  envTypes: ["prod"]
+data:
+
+  # WAF — block common attack patterns before they reach EDS
+  trafficFilters:
+    rules:
+      - name: block-sql-injection
+        when:
+          reqProperty: url
+          matches: "UNION SELECT|OR 1=1|--"
+        action:
+          type: block
+          status: 403
+
+      - name: block-suspicious-paths
+        when:
+          reqProperty: path
+          matches: "/wp-admin|/.env|/.git"
+        action:
+          type: block
+          status: 403
+
+  # Redirect apex domain to www
+  redirects:
+    rules:
+      - name: apex-to-www
+        when:
+          reqProperty: domain
+          equals: "anoo.store"
+        action:
+          type: redirect
+          status: 301
+          location:
+            join:
+              format: "https://www.%s%s"
+              args:
+                - reqProperty: domain
+                - reqProperty: url
