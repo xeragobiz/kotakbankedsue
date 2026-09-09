@@ -1,16 +1,54 @@
 version: 1
 
 indices:
-  pages:
+  en:
     include:
-      - '/**'
+      - '/en-in/**'
     exclude:
       - '/**.json'
-    target: /query-index.json
+    target: /en-in/query-index.json
     properties:
       lastModified:
         select: none
         value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
+      lang:
+        select: html
+        value: attribute(el, "lang")
+      robots:
+        select: head > meta[name="robots"]
+        value: attribute(el, "content")
+
+  hi:
+    include:
+      - '/hi-in/**'
+    exclude:
+      - '/**.json'
+    target: /hi-in/query-index.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
+      lang:
+        select: html
+        value: attribute(el, "lang")
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")
