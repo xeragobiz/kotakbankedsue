@@ -6,4 +6,9 @@
   <sitemap>
     <loc>https://www.kotak.bank.in/sitemap-hi.xml</loc>
   </sitemap>
+  <!-- On-prem AEM pages (hybrid setup). Served by the on-prem backend via the
+       shared CDN; distinct path to avoid colliding with EDS sitemap routes. -->
+  <sitemap>
+    <loc>https://www.kotak.bank.in/sitemap-onprem.xml</loc>
+  </sitemap>
 </sitemapindex>
