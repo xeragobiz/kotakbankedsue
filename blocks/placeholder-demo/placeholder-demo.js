@@ -33,20 +33,28 @@ export default async function decorate(block) {
   const key = (block.textContent || '').trim();
   block.textContent = '';
 
+  // Lay the value out on the DLS grid: full width on mobile, half on tablet,
+  // one third on desktop.
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  const cell = document.createElement('div');
+  cell.className = 'grid-col-12 grid-col-t-4 grid-col-d-4';
+
   const out = document.createElement('p');
   out.className = 'placeholder-demo-value';
 
   if (!key) {
     out.textContent = 'No placeholder key provided.';
-    block.append(out);
-    return;
+  } else {
+    const placeholders = await getPlaceholders();
+    if (Object.prototype.hasOwnProperty.call(placeholders, key)) {
+      out.textContent = placeholders[key];
+    } else {
+      out.textContent = `Unknown placeholder: ${key}`;
+    }
   }
 
-  const placeholders = await getPlaceholders();
-  if (Object.prototype.hasOwnProperty.call(placeholders, key)) {
-    out.textContent = placeholders[key];
-  } else {
-    out.textContent = `Unknown placeholder: ${key}`;
-  }
-  block.append(out);
+  cell.append(out);
+  grid.append(cell);
+  block.append(grid);
 }

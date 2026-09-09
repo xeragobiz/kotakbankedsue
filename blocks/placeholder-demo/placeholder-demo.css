@@ -1,5 +1,10 @@
+/* Kotak DLS: background token + spacing/radius tokens, value styled with brand text token */
 .placeholder-demo .placeholder-demo-value {
-  font-size: var(--heading-font-size-m);
-  font-weight: 700;
   margin: 0;
+  padding: var(--spacing-spacing-24, 24px);
+  border-radius: var(--cr-12, 12px);
+  background-color: var(--background-2-default-base, #f5f5f5);
+  color: var(--text-primary-default-base, #131313);
+  font-size: var(--heading-font-size-m);
+  font-weight: var(--bold, 700);
 }
