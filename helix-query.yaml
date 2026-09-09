@@ -1,22 +1,31 @@
 version: 1
 
 indices:
+  # English is folder-mapped to the site root (/content/kotakbankedsue/en-in/ -> /),
+  # so its published pages live at root paths (e.g. /personal/accounts), NOT under
+  # /en-in. The index therefore scopes to everything at root EXCEPT the other
+  # language subtrees (hi-in, ta-in) and non-content/utility paths.
   en:
     include:
-      - '/en-in/**'
+      - '/**'
     exclude:
       - '/**.json'
-      - '/en-in/nav'
-      - '/en-in/header'
-      - '/en-in/footer'
-      - '/en-in/fragments/**'
-      - '/en-in/metadata'
-      - '/en-in/placeholders'
-      - '/en-in/search'
-      - '/en-in/apply'
-      - '/en-in/track-application'
-      - '/en-in/**demo**'
-    target: /en-in/query-index.json
+      - '/hi-in/**'
+      - '/ta-in/**'
+      - '/nav'
+      - '/nav/**'
+      - '/header'
+      - '/footer'
+      - '/fragments/**'
+      - '/metadata'
+      - '/placeholders'
+      - '/redirects'
+      - '/search'
+      - '/apply'
+      - '/track-application'
+      - '/drafts/**'
+      - '/**demo**'
+    target: /query-index.json
     properties:
       title:
         select: head > meta[property="og:title"]
@@ -43,6 +52,7 @@ indices:
     exclude:
       - '/**.json'
       - '/hi-in/nav'
+      - '/hi-in/nav/**'
       - '/hi-in/header'
       - '/hi-in/footer'
       - '/hi-in/fragments/**'
@@ -51,6 +61,7 @@ indices:
       - '/hi-in/search'
       - '/hi-in/apply'
       - '/hi-in/track-application'
+      - '/hi-in/drafts/**'
       - '/hi-in/**demo**'
     target: /hi-in/query-index.json
     properties:

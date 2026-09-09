@@ -5,11 +5,11 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /en-in/query-index.json
+        # English is folder-mapped to root, so its index target is the root
+        # /query-index.json and its public URLs (and <loc>) carry no prefix.
+        source: /query-index.json
         destination: /sitemap-en.xml
         hreflang: en
-        # English is folder-mapped to root, so its public URLs (and <loc>)
-        # must NOT carry the /en-in prefix. See note below on index paths.
         alternate: /{path}
       hi:
         source: /hi-in/query-index.json
