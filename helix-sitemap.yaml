@@ -1,15 +1,21 @@
 sitemaps:
-  default:
-    origin: https://main--kotakbankedsue--xeragobiz.aem.live
+  kotak:
+    origin: https://www.kotak.bank.in
     lastmod: YYYY-MM-DD
+    default: en
     languages:
       en:
-        source: /en-in/query-index.json
-        destination: /en-in/sitemap.xml
-        hreflang: en-in
-        alternate: /en-in/{path}
+        # English is folder-mapped to root, so its index target is the root
+        # /query-index.json and its public URLs (and <loc>) carry no prefix.
+        source: /query-index.json
+        destination: /sitemap-en.xml
+        hreflang: en
+        alternate: /{path}
       hi:
         source: /hi-in/query-index.json
-        destination: /hi-in/sitemap.xml
-        hreflang: hi-in
+        destination: /sitemap-hi.xml
+        hreflang: hi
         alternate: /hi-in/{path}
+    index:
+      - /sitemap-en.xml
+      - /sitemap-hi.xml
