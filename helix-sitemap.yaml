@@ -2,27 +2,29 @@ sitemaps:
   kotak:
     origin: https://www.kotak.bank.in
     lastmod: YYYY-MM-DD
-    default: en
+    default: en-in
     languages:
-      en:
+      # Locale-based (country+language) naming to match the /en-in /hi-in path
+      # convention and scale to more countries per language later (e.g. en-ae).
+      en-in:
         # English is folder-mapped to root, so its index target is the root
         # /query-index.json and its public URLs (and <loc>) carry no prefix.
         source: /query-index.json
-        destination: /sitemap-en.xml
-        hreflang: en
+        destination: /sitemap-en-in.xml
+        hreflang: en-in
         alternate: /{path}
-      hi:
+      hi-in:
         source: /hi-in/query-index.json
-        destination: /sitemap-hi.xml
-        hreflang: hi
+        destination: /sitemap-hi-in.xml
+        hreflang: hi-in
         alternate: /hi-in/{path}
 
 # NOTE: The top-level `index:` directive (which asks AEM to auto-generate
 # /sitemap-index.xml) is not being honored by the sitemap generator for this
-# project - rebuild jobs only ever emit sitemap-en.xml/sitemap-hi.xml and a
-# direct request returns "Unable to find sitemap that has destination:
+# project - rebuild jobs only ever emit the per-locale sitemaps and a direct
+# request returns "Unable to find sitemap that has destination:
 # /sitemap-index.xml". Until that platform behavior is resolved, the aggregated
 # index is maintained as a static file at repo-root sitemap-index.xml.
 # index:
-#   - /sitemap-en.xml
-#   - /sitemap-hi.xml
+#   - /sitemap-en-in.xml
+#   - /sitemap-hi-in.xml
