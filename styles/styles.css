@@ -13,13 +13,14 @@
 @import url('./grid.css');
 
 :root {
-  /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  /* colors — mapped to Kotak DLS semantic tokens (see docs/kotak-grid-tokens/TOKENS.md).
+     Fallbacks preserve the boilerplate values if variables.css is unavailable. */
+  --background-color: var(--background-1-default-base, white);
+  --light-color: var(--background-2-default-base, #f8f8f8);
+  --dark-color: var(--text-secondary-default-base, #505050);
+  --text-color: var(--text-primary-default-base, #131313);
+  --link-color: var(--action-blue-blue-70, #3b63fb);
+  --link-hover-color: var(--action-blue-blue-80, #1d3ecf);
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
