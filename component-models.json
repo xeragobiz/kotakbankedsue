@@ -214,5 +214,17 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "placeholder-demo",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "key",
+        "label": "Placeholder Key",
+        "description": "Enter a placeholder key from placeholders.json (e.g. sitename, interestrate, customercare). Its value will be rendered."
+      }
+    ]
   }
 ]
