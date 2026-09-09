@@ -5,7 +5,7 @@ indices:
   # so its published pages live at root paths (e.g. /personal/accounts), NOT under
   # /en-in. The index therefore scopes to everything at root EXCEPT the other
   # language subtrees (hi-in, ta-in) and non-content/utility paths.
-  en:
+  en-in:
     include:
       - '/**'
     exclude:
@@ -46,7 +46,7 @@ indices:
         select: head > meta[name="robots"]
         value: attribute(el, "content")
 
-  hi:
+  hi-in:
     include:
       - '/hi-in/**'
     exclude:
