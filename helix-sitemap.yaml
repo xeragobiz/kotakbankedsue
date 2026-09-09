@@ -17,7 +17,7 @@ sitemaps:
         hreflang: hi
         alternate: /hi-in/{path}
 
-# Top-level index block (sibling of `sitemaps:`) — AEM regenerates
+# Top-level index block (sibling of sitemaps) - AEM regenerates
 # /sitemap-index.xml aggregating these whenever the sitemaps rebuild.
 index:
   - /sitemap-en.xml
