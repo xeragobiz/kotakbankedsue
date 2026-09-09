@@ -1,0 +1,126 @@
+/* Responsive Grid System
+ *
+ * Breakpoints follow the design spec:
+ *   Mobile           0-475px    4 cols   12px gutter   20px margin   fluid
+ *   Tablet Portrait  476-834px  8 cols   12px gutter   40px margin   fluid
+ *   Tablet Landscape 835-1024px 12 cols  12px gutter   92px margin   fluid
+ *   Laptop/Desktop   1025-1920  12 cols  16px gutter   92px margin   max 1736px
+ *   Ultrawide        1921px+    12 cols  16px gutter   auto margin   locked 1736px
+ *
+ * Above 1920px no extra breakpoint is needed: the 1736px max-width combined with
+ * `margin-inline: auto` centres the grid and lets the margins grow on their own
+ * (412px each at 2560px). At exactly 1920px the fluid content area already
+ * measures 1736px, so columns land on 130px and the transition is seamless.
+ */
+
+:root {
+  /* columns */
+  --grid-columns-mobile: 4;
+  --grid-columns-tablet-p: 8;
+  --grid-columns-tablet-l: 12;
+  --grid-columns-desktop: 12;
+
+  /* gutters */
+  --grid-gutter-mobile: 12px;
+  --grid-gutter-tablet: 12px;
+  --grid-gutter-desktop: 16px;
+
+  /* side margins */
+  --grid-margin-mobile: 20px;
+  --grid-margin-tablet-p: 40px;
+  --grid-margin-tablet-l: 92px;
+  --grid-margin-desktop: 92px;
+
+  /* max content width -- 100% means fluid */
+  --grid-max-width-mobile: 100%;
+  --grid-max-width-tablet: 100%;
+  --grid-max-width-desktop: 1736px;
+}
+
+body {
+  --grid-cols: var(--grid-columns-mobile);
+  --grid-gutter: var(--grid-gutter-mobile);
+  --grid-margin: var(--grid-margin-mobile);
+  --grid-max-width: var(--grid-max-width-mobile);
+}
+
+@media (width >= 476px) {
+  body {
+    --grid-cols: var(--grid-columns-tablet-p);
+    --grid-gutter: var(--grid-gutter-tablet);
+    --grid-margin: var(--grid-margin-tablet-p);
+    --grid-max-width: var(--grid-max-width-tablet);
+  }
+}
+
+@media (width >= 835px) {
+  body {
+    --grid-cols: var(--grid-columns-tablet-l);
+    --grid-gutter: var(--grid-gutter-tablet);
+    --grid-margin: var(--grid-margin-tablet-l);
+    --grid-max-width: var(--grid-max-width-tablet);
+  }
+}
+
+@media (width >= 1025px) {
+  body {
+    --grid-cols: var(--grid-columns-desktop);
+    --grid-gutter: var(--grid-gutter-desktop);
+    --grid-margin: var(--grid-margin-desktop);
+    --grid-max-width: var(--grid-max-width-desktop);
+  }
+}
+
+/* Grid Container */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  gap: var(--grid-gutter);
+
+  /* fluid up to the max width, always keeping the side margin */
+  width: min(100% - (2 * var(--grid-margin)), var(--grid-max-width));
+  margin-inline: auto;
+}
+
+/* Grid Column Spanning -- spans are relative to the column count of the
+ * current breakpoint (4 mobile / 8 tablet portrait / 12 from 835px up). */
+.grid-col-1 { grid-column: span 1; }
+.grid-col-2 { grid-column: span 2; }
+.grid-col-3 { grid-column: span 3; }
+.grid-col-4 { grid-column: span 4; }
+.grid-col-5 { grid-column: span 5; }
+.grid-col-6 { grid-column: span 6; }
+.grid-col-7 { grid-column: span 7; }
+.grid-col-8 { grid-column: span 8; }
+.grid-col-9 { grid-column: span 9; }
+.grid-col-10 { grid-column: span 10; }
+.grid-col-11 { grid-column: span 11; }
+.grid-col-12 { grid-column: span 12; }
+
+/* Tablet portrait and up */
+@media (width >= 476px) {
+  .grid-col-t-1 { grid-column: span 1; }
+  .grid-col-t-2 { grid-column: span 2; }
+  .grid-col-t-3 { grid-column: span 3; }
+  .grid-col-t-4 { grid-column: span 4; }
+  .grid-col-t-5 { grid-column: span 5; }
+  .grid-col-t-6 { grid-column: span 6; }
+  .grid-col-t-7 { grid-column: span 7; }
+  .grid-col-t-8 { grid-column: span 8; }
+}
+
+/* Laptop and up */
+@media (width >= 1025px) {
+  .grid-col-d-1 { grid-column: span 1; }
+  .grid-col-d-2 { grid-column: span 2; }
+  .grid-col-d-3 { grid-column: span 3; }
+  .grid-col-d-4 { grid-column: span 4; }
+  .grid-col-d-5 { grid-column: span 5; }
+  .grid-col-d-6 { grid-column: span 6; }
+  .grid-col-d-7 { grid-column: span 7; }
+  .grid-col-d-8 { grid-column: span 8; }
+  .grid-col-d-9 { grid-column: span 9; }
+  .grid-col-d-10 { grid-column: span 10; }
+  .grid-col-d-11 { grid-column: span 11; }
+  .grid-col-d-12 { grid-column: span 12; }
+}
