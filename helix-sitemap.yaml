@@ -8,7 +8,9 @@ sitemaps:
         source: /en-in/query-index.json
         destination: /sitemap-en.xml
         hreflang: en
-        alternate: /en-in/{path}
+        # English is folder-mapped to root, so its public URLs (and <loc>)
+        # must NOT carry the /en-in prefix. See note below on index paths.
+        alternate: /{path}
       hi:
         source: /hi-in/query-index.json
         destination: /sitemap-hi.xml
