@@ -11,6 +11,8 @@ import {
   loadCSS,
 } from './aem.js';
 
+import { replacePlaceholderTokens } from './placeholders.js';
+
 /**
  * Moves all the attributes from a given elmenet to another given element.
  * @param {Element} from the element to copy attributes from
@@ -155,6 +157,9 @@ async function loadLazy(doc) {
 
   const main = doc.querySelector('main');
   await loadSections(main);
+
+  // Replace {{key}} tokens in authored content with global placeholder values.
+  await replacePlaceholderTokens(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
