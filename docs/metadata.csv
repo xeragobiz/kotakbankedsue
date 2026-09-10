@@ -1,11 +1,11 @@
-url,robots,og:type,og:site_name,og:title,twitter:card,twitter:site,keywords,author,header-variant,nav,footer,sitemap_weightage,x-tag,json-ld,lang
-/**,"index, follow",website,Kotak,Kotak,summary_large_image,@kotakbank," Kotak Bank, zero balance account, digital savings account, online banking",Kotak Mahindra Bank,default,/header,/footer,0.5,,,en-in
+url,robots,og:type,og:site_name,og:title,twitter:card,twitter:site,keywords,author,header-variant,nav,footer,sitemap_weightage,x-tag,lang,json-ld
+/**,"index, follow",website,Kotak,Kotak,summary_large_image,@kotakbank," Kotak Bank, zero balance account, digital savings account, online banking",Kotak Mahindra Bank,default,/header,/footer,0.5,,en-in,
 /drafts/**,"noindex, nofollow",,,,,,,,logo-only,/header,/footer,0.4,,,
 /tools/**,"noindex, nofollow",,,,,,,,,,,0.4,,,
 /home,"index, follow",,,,,,,,logo-only,/header,/footer,0.6,,,
 /index,"index, follow",website,Kotak,Kotak,summary_large_image,,,,default,/header,/footer,1,,,
-/personal/accounts/saving-account,,,,,,,,,,,,,,"{""@context"":""https://schema.org"",""@type"":""FinancialProduct"",""name"":""Kotak Saving Account"",""category"":""Savings Account"",""provider"":{""@type"":""BankOrCreditUnion"",""name"":""Kotak Mahindra Bank""},""url"":""https://www.kotak.bank.in/accounts/saving-account"",""annualPercentageRate"":""6.8""}",
-/hi-in/**,"index, follow",website,Kotak,कोटक,summary_large_image,@kotakbank,"कोटक बैंक, ज़ीरो बैलेंस खाता, डिजिटल बचत खाता, ऑनलाइन बैंकिंग",Kotak Mahindra Bank,default,/header,/footer,0.5,,,hi-in
-/hi-in/personal/accounts/**,,,,बचत खाता | कोटक बैंक,,,"कोटक, बचत खाता, वेतन खाता",,,,,0.6,,,hi-in
-/hi-in/premium-banking/**,,,,प्रीमियम बैंकिंग | कोटक बैंक,,,"कोटक, प्रीमियम बैंकिंग",,,,,0.5,,,hi-in
-/hi-in/corporate,,,,कॉर्पोरेट | कोटक बैंक,,,"कोटक, कॉर्पोरेट बैंकिंग",,,,,0.5,,,hi-in
+/hi-in/**,"index, follow",website,Kotak,कोटक,summary_large_image,@kotakbank,"कोटक बैंक, ज़ीरो बैलेंस खाता, डिजिटल बचत खाता, ऑनलाइन बैंकिंग",Kotak Mahindra Bank,default,/header,/footer,0.5,,hi-in,
+/hi-in/personal/accounts/**,,,,बचत खाता | कोटक बैंक,,,"कोटक, बचत खाता, वेतन खाता",,,,,0.6,,hi-in,
+/hi-in/premium-banking/**,,,,प्रीमियम बैंकिंग | कोटक बैंक,,,"कोटक, प्रीमियम बैंकिंग",,,,,0.5,,hi-in,
+/hi-in/corporate,,,,कॉर्पोरेट | कोटक बैंक,,,"कोटक, कॉर्पोरेट बैंकिंग",,,,,0.5,,hi-in,
+/personal/accounts/saving-account,,,,,,,,,,,,,,,"{""@context"":""https://schema.org"",""@type"":""FinancialProduct"",""name"":""Kotak Saving Account"",""category"":""Savings Account"",""provider"":{""@type"":""BankOrCreditUnion"",""name"":""Kotak Mahindra Bank""},""url"":""https://www.kotak.bank.in/accounts/saving-account"",""annualPercentageRate"":""6.8""}"
