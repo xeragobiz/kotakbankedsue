@@ -69,13 +69,45 @@ Hindi accounts section (must come AFTER `/hi-in/**`):
 | title | `खाते | कोटक बैंक` |
 | description | `कोटक बचत या वेतन खाता ऑनलाइन खोलें।` |
 
+English premium banking section:
+| Field | Value |
+|-------|-------|
+| URL | `/premium-banking/**` |
+| title | `Premium Banking | Kotak Bank` |
+| description | `Priority banking and premium services from Kotak.` |
+
+Hindi premium banking section (must come AFTER `/hi-in/**`):
+| Field | Value |
+|-------|-------|
+| URL | `/hi-in/premium-banking/**` |
+| title | `प्रीमियम बैंकिंग | कोटक बैंक` |
+| description | `कोटक की प्रायोरिटी बैंकिंग और प्रीमियम सेवाएँ।` |
+
+English corporate section (`/corporate` is a single page; `/corporate/**` also covers any children):
+| Field | Value |
+|-------|-------|
+| URL | `/corporate` |
+| title | `Corporate | Kotak Bank` |
+| description | `Corporate and institutional banking solutions from Kotak.` |
+
+Hindi corporate section (must come AFTER `/hi-in/**`):
+| Field | Value |
+|-------|-------|
+| URL | `/hi-in/corporate` |
+| title | `कॉर्पोरेट | कोटक बैंक` |
+| description | `कोटक के कॉर्पोरेट और संस्थागत बैंकिंग समाधान।` |
+
 ## Final row order (top to bottom)
 
 ```
 /**                              ← English site-wide default (FIRST)
 /personal/accounts/**            ← English section override
+/premium-banking/**              ← English section override
+/corporate                       ← English single page
 /hi-in/**                        ← Hindi subtree default
 /hi-in/personal/accounts/**      ← Hindi section override (after /hi-in/**)
+/hi-in/premium-banking/**        ← Hindi section override (after /hi-in/**)
+/hi-in/corporate                 ← Hindi single page (after /hi-in/**)
 ```
 
 ## Notes tying into existing config
